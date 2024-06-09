@@ -1636,9 +1636,6 @@ importers:
       valibot:
         specifier: ^0.31.1
         version: 0.31.1
-      zod:
-        specifier: ^3.22.4
-        version: 3.23.8
 
   packages/start:
     dependencies:

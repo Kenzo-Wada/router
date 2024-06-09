@@ -1,6 +1,6 @@
 import { isAbsolute, join, normalize, resolve } from 'path'
 import { fileURLToPath, pathToFileURL } from 'url'
-import { boolean, object, optional, parse } from 'valibot'
+import { boolean, intersect, object, optional, parse } from 'valibot'
 import {
   generator,
   configSchema as generatorConfigSchema,
@@ -8,10 +8,10 @@ import {
 } from '@tanstack/router-generator'
 import { compileFile, makeCompile, splitFile } from './compilers'
 import { splitPrefix } from './constants'
-import type { InferInput } from 'valibot'
+import type { InferOutput } from 'valibot'
 import type { Plugin } from 'vite'
 
-export const configSchema = generatorConfigSchema.extend({
+const additionalConfig = object({
   enableRouteGeneration: optional(boolean()),
   experimental: optional(
     object({
@@ -20,7 +20,12 @@ export const configSchema = generatorConfigSchema.extend({
   ),
 })
 
-export type Config = InferInput<typeof configSchema>
+export const configSchema = object({
+  ...generatorConfigSchema.entries,
+  ...additionalConfig.entries,
+})
+
+export type Config = InferOutput<typeof configSchema>
 
 const CONFIG_FILE_NAME = 'tsr.config.json'
 const debug = Boolean(process.env.TSR_VITE_DEBUG)
