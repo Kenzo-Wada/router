@@ -1,6 +1,6 @@
 import { isAbsolute, join, normalize, resolve } from 'path'
 import { fileURLToPath, pathToFileURL } from 'url'
-import { z } from 'zod'
+import { boolean, object, optional, parse } from 'valibot'
 import {
   generator,
   configSchema as generatorConfigSchema,
@@ -8,18 +8,19 @@ import {
 } from '@tanstack/router-generator'
 import { compileFile, makeCompile, splitFile } from './compilers'
 import { splitPrefix } from './constants'
+import type { InferInput } from 'valibot'
 import type { Plugin } from 'vite'
 
 export const configSchema = generatorConfigSchema.extend({
-  enableRouteGeneration: z.boolean().optional(),
-  experimental: z
-    .object({
-      enableCodeSplitting: z.boolean().optional(),
-    })
-    .optional(),
+  enableRouteGeneration: optional(boolean()),
+  experimental: optional(
+    object({
+      enableCodeSplitting: optional(boolean()),
+    }),
+  ),
 })
 
-export type Config = z.infer<typeof configSchema>
+export type Config = InferInput<typeof configSchema>
 
 const CONFIG_FILE_NAME = 'tsr.config.json'
 const debug = Boolean(process.env.TSR_VITE_DEBUG)
@@ -27,7 +28,7 @@ const debug = Boolean(process.env.TSR_VITE_DEBUG)
 const getConfig = async (inlineConfig: Partial<Config>, root: string) => {
   const config = await getGeneratorConfig(inlineConfig, root)
 
-  return configSchema.parse({ ...config, ...inlineConfig })
+  return parse(configSchema, { ...config, ...inlineConfig })
 }
 
 export function TanStackRouterVite(

@@ -7,7 +7,7 @@ export function trimPathLeft(path: string) {
   return path === '/' ? path : path.replace(/^\/{1,}/, '')
 }
 
-export function logging(config: { disabled: boolean }) {
+export function logging(config: { disabled?: boolean }) {
   return {
     log: (...args: Array<any>) => {
       if (!config.disabled) console.log(...args)

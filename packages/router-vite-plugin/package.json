@@ -73,6 +73,7 @@
     "@types/babel__template": "^7.4.4",
     "@types/babel__traverse": "^7.20.5",
     "@vitejs/plugin-react": "^4.2.1",
+    "valibot": "^0.31.1",
     "zod": "^3.22.4"
   }
 }
